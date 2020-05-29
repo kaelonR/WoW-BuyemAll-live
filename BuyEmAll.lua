@@ -1,4 +1,4 @@
--- BuyEmAll - Originally created and developed by Cogwheel up to version 2.8.4, now developed by Shinisuryu.
+-- BuyEmAll - Originally created and developed by Cogwheel up to version 2.8.4, Shinisuryu up to version 3.5.5, now developed by Jordy141.
 
 BuyEmAll = {}
 
@@ -205,7 +205,6 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
         end
 
         -- Buying a currency with a currency! Thanks to recent changes, this should cover all cases.
-
         if ((strmatch(self.itemLink, "currency")) and (self.price == 0)) then
             local totalMax = select(6, GetCurrencyInfo(self.itemLink));
             if (totalMax == 0) then -- 0 meaning no set maximum, so set how much one can fit super high.
@@ -444,7 +443,7 @@ function BuyEmAll:DoPurchase(amount)
     PurchaseLoopFrame:SetScript("OnUpdate", BuyEmAll.onUpdate);
 end
 
--- Rounds the alternate currency purchase amount, if needed, to the nearest multiple of the preset stack.
+-- Rounds the alternate currency purchase amount, if needed, to the next multiple of the preset stack.
 
 function BuyEmAll:AltCurrRounding(purchase)
     local singleCost = 0;
