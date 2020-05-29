@@ -1,4 +1,4 @@
--- BuyEmAll - Originally created and developed by Cogwheel up to version 2.8.4, now developed by Shinisuryu.
+-- BuyEmAll - Originally created and developed by Cogwheel up to version 2.8.4, Shinisuryu up to version 3.5.5, now developed by Jordy141.
 
 BuyEmAll = {}
 
@@ -72,6 +72,27 @@ function BuyEmAll:SlashHandler(message, editbox)
             print("BuyEmAll: Large purchase confirm window enabled.");
         end
     end
+end
+
+function BuyEmAll:ItemIsUnique(itemID)
+    BuyEmAllTooltip:SetOwner(UIParent, "ANCHOR_NONE")
+    local itemLink = "item:" .. itemID .. ":0:0:0:0:0:0:0";
+    BuyEmAllTooltip:SetHyperlink(itemLink)
+    local isUnique = false;
+    for i = 1, select("#", BuyEmAllTooltip:GetRegions()) do
+        local region = select(i, BuyEmAllTooltip:GetRegions())
+        if region and region:GetObjectType() == "FontString" then
+            local text = region:GetText()
+            if(text == "Unique") then
+                isUnique = true;
+                break;
+            end
+        end
+    end
+    
+    BuyEmAllTooltip:Hide()
+
+    return isUnique;
 end
 
 -- Variable setup/check.
@@ -184,7 +205,6 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
         end
 
         -- Buying a currency with a currency! Thanks to recent changes, this should cover all cases.
-
         if ((strmatch(self.itemLink, "currency")) and (self.price == 0)) then
             local totalMax = select(6, GetCurrencyInfo(self.itemLink));
             if (totalMax == 0) then -- 0 meaning no set maximum, so set how much one can fit super high.
@@ -228,7 +248,9 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
         -- Modified to check for free items. Mostly for the PTR/Beta servers, but it shouldn't hurt to leave it in.
         -- Put after the alternate currency trigger to prevent issues. Always had it here, just adding the note.
 
-        if (self.price == 0) then
+        if (self.itemID ~= nil and BuyEmAll:ItemIsUnique(self.itemID)) then
+            self.afford = 1
+        elseif (self.price == 0) then
             self.afford = self.fit;
         else
             self.afford = floor(GetMoney() / ceil(self.price / self.preset));
@@ -279,10 +301,14 @@ function BuyEmAll:AltCurrencyHandling(itemIndex, frame)
         end
     end
     
-    if (NumAltCurrency == 1) then
-        self.afford = self.AltCurrAfford[1];
-    else
-        self.afford = min(self.AltCurrAfford[1], self.AltCurrAfford[2] or 999999, self.AltCurrAfford[3] or 999999); -- Used Min so if there's not 3 currencies, the others won't be called on.
+    self.afford = self.AltCurrAfford[1];
+
+    if(self.itemID ~= nil and BuyEmAll:ItemIsUnique(self.itemID)) then
+        self.afford = 1;
+    elseif (self.NumAltCurrency > 1) then
+        for i = 2, self.NumAltCurrency do
+            self.afford = min(self.afford, self.AltCurrAfford[i] or 999999);
+        end
     end
 
     self.max = min(self.fit, self.afford);
@@ -386,18 +412,21 @@ function BuyEmAll:DoPurchase(amount)
     BuyEmAllFrame:Hide();
     local numLoops, purchAmount, leftover;
 
+    if(strmatch(self.itemLink, "currency")) then --if item being purchased is a currency, then skip the loop logic and buy everything at once.
+        BuyMerchantItem(self.itemIndex, amount);
+        return;
+    end
+
     if (amount <= self.stack) then
         purchAmount = amount;
         numLoops = 1;
         leftover = 0;
     else
-        if (amount % self.stack) > 0 then
             purchAmount = self.stack;
             numLoops = floor(amount / self.stack);
+        if (amount % self.stack) > 0 then
             leftover = amount % self.stack;
         else
-            purchAmount = self.stack;
-            numLoops = floor(amount / self.stack);
             leftover = 0;
         end
     end
@@ -414,7 +443,7 @@ function BuyEmAll:DoPurchase(amount)
     PurchaseLoopFrame:SetScript("OnUpdate", BuyEmAll.onUpdate);
 end
 
--- Rounds the alternate currency purchase amount, if needed, to the nearest multiple of the preset stack.
+-- Rounds the alternate currency purchase amount, if needed, to the next multiple of the preset stack.
 
 function BuyEmAll:AltCurrRounding(purchase)
     local singleCost = 0;
@@ -425,13 +454,10 @@ function BuyEmAll:AltCurrRounding(purchase)
         end
     end
     if (singleCost) then    -- Checks if the previous result is true, if so, the purchase can't be less than the preset amount.
-        if ((purchase % self.preset) < (self.preset / 2)) then  -- Rounding down.
-            amount = purchase - (purchase % self.preset);
-            return amount;
-        elseif ((purchase % self.preset) >= (self.preset / 2)) then -- Rounding up.
-            amount = purchase + (self.preset - (purchase % self.preset));
-            return amount;
+        if(purchase % self.preset ~= 0) then
+            amount = purchase + (self.preset - (purchase % self.preset)); --round amount up to the next multiple of the preset stack.
         end
+        return amount;
     else
         return amount;
     end 
