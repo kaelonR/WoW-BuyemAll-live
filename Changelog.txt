@@ -1,4 +1,8 @@
-﻿v3.5.6
+﻿v3.5.7
+-Internal optimalisation for recognizing unique items
+-optimized code throughout the addon for better performance and a smaller footprint
+
+v3.5.6
 -Addon ownership has transferred from Shinisuryu to Jordy141
 -When buying currencies, the exchange is now done in one go instead of one item at a time, greatly speeding up transaction time (issue #22)
 -When purchasing an item that can only be bought in stacks, BuyEmAll now rounds the purchase amount up to the next multiple of the stack size the item is sold in, rather than to the nearest multiple.
