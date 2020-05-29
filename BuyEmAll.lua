@@ -386,18 +386,21 @@ function BuyEmAll:DoPurchase(amount)
     BuyEmAllFrame:Hide();
     local numLoops, purchAmount, leftover;
 
+    if(strmatch(self.itemLink, "currency")) then --if item being purchased is a currency, then skip the loop logic and buy everything at once.
+        BuyMerchantItem(self.itemIndex, amount);
+        return;
+    end
+
     if (amount <= self.stack) then
         purchAmount = amount;
         numLoops = 1;
         leftover = 0;
     else
-        if (amount % self.stack) > 0 then
             purchAmount = self.stack;
             numLoops = floor(amount / self.stack);
+        if (amount % self.stack) > 0 then
             leftover = amount % self.stack;
         else
-            purchAmount = self.stack;
-            numLoops = floor(amount / self.stack);
             leftover = 0;
         end
     end
