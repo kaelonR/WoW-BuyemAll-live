@@ -425,13 +425,10 @@ function BuyEmAll:AltCurrRounding(purchase)
         end
     end
     if (singleCost) then    -- Checks if the previous result is true, if so, the purchase can't be less than the preset amount.
-        if ((purchase % self.preset) < (self.preset / 2)) then  -- Rounding down.
-            amount = purchase - (purchase % self.preset);
-            return amount;
-        elseif ((purchase % self.preset) >= (self.preset / 2)) then -- Rounding up.
-            amount = purchase + (self.preset - (purchase % self.preset));
-            return amount;
+        if(purchase % self.preset ~= 0) then
+            amount = purchase + (self.preset - (purchase % self.preset)); --round amount up to the next multiple of the preset stack.
         end
+        return amount;
     else
         return amount;
     end 
