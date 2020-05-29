@@ -74,6 +74,27 @@ function BuyEmAll:SlashHandler(message, editbox)
     end
 end
 
+function BuyEmAll:ItemIsUnique(itemID)
+    BuyEmAllTooltip:SetOwner(UIParent, "ANCHOR_NONE")
+    local itemLink = "item:" .. itemID .. ":0:0:0:0:0:0:0";
+    BuyEmAllTooltip:SetHyperlink(itemLink)
+    local isUnique = false;
+    for i = 1, select("#", BuyEmAllTooltip:GetRegions()) do
+        local region = select(i, BuyEmAllTooltip:GetRegions())
+        if region and region:GetObjectType() == "FontString" then
+            local text = region:GetText()
+            if(text == "Unique") then
+                isUnique = true;
+                break;
+            end
+        end
+    end
+    
+    BuyEmAllTooltip:Hide()
+
+    return isUnique;
+end
+
 -- Variable setup/check.
 
 local BEAframe = CreateFrame("FRAME", "BEAFrame");
@@ -228,7 +249,9 @@ function BuyEmAll:MerchantItemButton_OnModifiedClick(frame, button)
         -- Modified to check for free items. Mostly for the PTR/Beta servers, but it shouldn't hurt to leave it in.
         -- Put after the alternate currency trigger to prevent issues. Always had it here, just adding the note.
 
-        if (self.price == 0) then
+        if (self.itemID ~= nil and BuyEmAll:ItemIsUnique(self.itemID)) then
+            self.afford = 1
+        elseif (self.price == 0) then
             self.afford = self.fit;
         else
             self.afford = floor(GetMoney() / ceil(self.price / self.preset));
