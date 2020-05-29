@@ -279,10 +279,14 @@ function BuyEmAll:AltCurrencyHandling(itemIndex, frame)
         end
     end
     
-    if (NumAltCurrency == 1) then
-        self.afford = self.AltCurrAfford[1];
-    else
-        self.afford = min(self.AltCurrAfford[1], self.AltCurrAfford[2] or 999999, self.AltCurrAfford[3] or 999999); -- Used Min so if there's not 3 currencies, the others won't be called on.
+    self.afford = self.AltCurrAfford[1];
+
+    if(self.itemID ~= nil and BuyEmAll:ItemIsUnique(self.itemID)) then
+        self.afford = 1;
+    elseif (self.NumAltCurrency > 1) then
+        for i = 2, self.NumAltCurrency do
+            self.afford = min(self.afford, self.AltCurrAfford[i] or 999999);
+        end
     end
 
     self.max = min(self.fit, self.afford);
