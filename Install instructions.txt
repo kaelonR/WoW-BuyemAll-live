@@ -1,0 +1,8 @@
+If you're reading this file, this means you've manually downloaded a release of BuyEmAll for retail WoW from github for
+installation into your WoW client.
+
+To install, copy the BuyEmAll folder that has the BuyEmAll.toc file directly in it, and paste the folder here:
+<WoW install directory>\_retail_\Interface\Addons
+
+since WoW 9.0 (Shadowlands), the client no longer needs to restart to detect new addons. just do a /reload and then check
+esc -> addons to enable BuyEmAll.
