@@ -1,0 +1,9 @@
+package-as: BuyEmAll 
+enable-nolib-creation: no
+
+ignore: # Files and directories beginning with a dot (such as .git) are automatically ignored, as is the pgkmeta file itself.
+    - "Install instructions.txt"
+
+manual-changelog: CHANGELOG.txt
+
+license-output: LICENSE.txt
