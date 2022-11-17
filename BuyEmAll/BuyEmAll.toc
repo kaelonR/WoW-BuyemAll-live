@@ -1,8 +1,8 @@
-## Interface: 100000
+## Interface: 100002
 ## Author: Jordy141
 ## Notes: Enhances shift-click interface at vendors, making it easier to buy large amounts of items at once.
 ## Title: BuyEmAll
-## Version: 3.5.12
+## Version: 3.5.13
 ## SavedVariablesPerCharacter: BEAConfirmToggle
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Merchant: true

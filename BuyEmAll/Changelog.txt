@@ -1,4 +1,7 @@
-﻿v3.5.12
+﻿v3.5.13
+-Support for WoW Dragonflight 10.0.2
+
+v3.5.12
 -Support for WoW Dragonflight 10.0.0
 -Fix code for calculating free bag space, as bag IDs have changed in Dragonflight
 
