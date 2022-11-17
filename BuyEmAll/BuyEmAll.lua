@@ -8,7 +8,11 @@ local L = BUYEMALL_LOCALS;
 
 BUYEMALL_MAX = L.MAX;
 BUYEMALL_STACK = L.STACK;
-
+local GetContainerNumFreeSlots = GetContainerNumFreeSlots or (C_Container and C_Container.GetContainerNumFreeSlots)
+local GetContainerNumSlots = GetContainerNumSlots or (C_Container and C_Container.GetContainerNumSlots)
+local ContainerIDToInventoryID = ContainerIDToInventoryID or (C_Container and C_Container.ContainerIDToInventoryID)
+local GetContainerItemLink = GetContainerItemLink or (C_Container and C_Container.GetContainerItemLink)
+local GetContainerItemInfo = GetContainerItemInfo or (C_Container and C_Container.GetContainerItemInfo)
 function BuyEmAll:OnLoad()
     -- Set up confirmation dialog.
 
@@ -127,6 +131,7 @@ function BuyEmAll:GetFreeBagSpace(itemID)
                 local itemLink = GetContainerItemLink(inventoryId, currentSlot);
                 if (itemLink and strfind(itemLink, "item:" .. itemID .. ":")) then
                     local itemCount = select(2, GetContainerItemInfo(inventoryId, currentSlot));
+                    itemCount = itemCount or 0;
                     print("Found " .. itemCount .. " existing items");
                     canFit = canFit + (stackSize - itemCount);
                 end
