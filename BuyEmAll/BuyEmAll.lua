@@ -9,6 +9,12 @@ local L = BUYEMALL_LOCALS;
 BUYEMALL_MAX = L.MAX;
 BUYEMALL_STACK = L.STACK;
 
+local GetContainerNumFreeSlots = GetContainerNumFreeSlots or (C_Container and C_Container.GetContainerNumFreeSlots)
+local GetContainerNumSlots = GetContainerNumSlots or (C_Container and C_Container.GetContainerNumSlots)
+local ContainerIDToInventoryID = ContainerIDToInventoryID or (C_Container and C_Container.ContainerIDToInventoryID)
+local GetContainerItemLink = GetContainerItemLink or (C_Container and C_Container.GetContainerItemLink)
+local GetContainerItemInfo = GetContainerItemInfo or (C_Container and C_Container.GetContainerItemInfo)
+
 function BuyEmAll:OnLoad()
     -- Set up confirmation dialog.
 
