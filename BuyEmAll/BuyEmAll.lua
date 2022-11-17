@@ -132,7 +132,7 @@ function BuyEmAll:GetFreeBagSpace(itemID)
             for currentSlot = 1, totalBagSlots do
                 local itemLink = GetContainerItemLink(inventoryId, currentSlot);
                 if (itemLink and strfind(itemLink, "item:" .. itemID .. ":")) then
-                    local itemCount = select(2, GetContainerItemInfo(inventoryId, currentSlot));
+                    local itemCount = select(2, GetContainerItemInfo(inventoryId, currentSlot)) or 0;
                     print("Found " .. itemCount .. " existing items");
                     canFit = canFit + (stackSize - itemCount);
                 end
