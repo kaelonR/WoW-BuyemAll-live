@@ -67,25 +67,20 @@ function BuyEmAll:SlashHandler(message, editbox)
 end
 
 function BuyEmAll:ItemIsUnique(itemIDOrLink)
-	if(string.sub(itemIDOrLink, 0, 5) ~= "item:") then
-		itemIDOrLink = "item:" .. itemIDOrLink .. ":0:0:0:0:0:0:0";
+	if(string.find(itemIDOrLink, "|Hitem:") ~= nil) then
+        itemIDOrLink = tonumber(string.match(itemIDOrLink, "|Hitem:(%d+):"));
 	end
-    BuyEmAllTooltip:SetOwner(UIParent, "ANCHOR_NONE")
-    BuyEmAllTooltip:SetHyperlink(itemIDOrLink)
-    local isUnique = false;
-    for i = 1, select("#", BuyEmAllTooltip:GetRegions()) do
-        local region = select(i, BuyEmAllTooltip:GetRegions())
-        if region and region:GetObjectType() == "FontString" then
-            if(region:GetText() == "Unique") then
-                isUnique = true;
-                break;
+
+    local tooltip = C_TooltipInfo.GetItemByID(itemIDOrLink);
+    for _, line in ipairs(tooltip.lines) do
+        for _, arg in ipairs(line.args) do
+            if(arg.field == 'leftText' and arg.stringVal == 'Unique') then
+                return true;
             end
         end
     end
-    
-    BuyEmAllTooltip:Hide()
-
-    return isUnique;
+   
+    return false;
 end
 
 -- Variable setup/check.
