@@ -1,5 +1,9 @@
-﻿v3.5.13
--Support for WoW Dragonflight 10.0.2
+﻿v3.5.14
+- Fix detection of partial stacks
+- Fix detection of Unique items, which should bypass the BuyEmAll dialog entirely
+
+v3.5.13
+- Support for WoW Dragonflight 10.0.2
 
 v3.5.12
 -Support for WoW Dragonflight 10.0.0
