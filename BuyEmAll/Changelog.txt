@@ -1,4 +1,7 @@
-﻿v3.5.14
+﻿v3.5.15
+- Update french localisation file (thanks to KarlitosVII on GitHub)
+
+v3.5.14
 - Fix detection of partial stacks
 - Fix detection of Unique items, which should bypass the BuyEmAll dialog entirely
 
